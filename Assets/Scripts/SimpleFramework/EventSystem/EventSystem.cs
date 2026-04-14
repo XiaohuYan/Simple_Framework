@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace SimpleManager.EventSystem
+namespace SimpleFramework.EventSystem
 {
     /// <summary>
     /// 事件中心
