@@ -172,8 +172,8 @@ namespace SimpleFramework.EventSystem
         /// 调用事件统一接口
         /// </summary>
         /// <typeparam name="TDelegate">事件类型</typeparam>
-        /// <param name="eventId"></param>
-        /// <param name="invokeAction"></param>
+        /// <param name="eventId">事件id</param>
+        /// <param name="invokeAction">事件</param>
         /// <exception cref="InvalidOperationException"></exception>
         private static void BroadcastInternal<TDelegate>(TEnum eventId, Action<TDelegate> invokeAction) where TDelegate : Delegate
         {
