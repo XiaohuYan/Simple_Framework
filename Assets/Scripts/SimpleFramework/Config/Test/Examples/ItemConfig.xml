@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <!-- 物品配置表示例 -->
+  <row Id="1001" ItemName="生命药水" ItemType="1" Quality="1" Price="50" Description="恢复 100 点生命值" MaxStack="99" IconPath="Icons/item_001" ModelPath="" EffectIds="101,102" />
+  <row Id="1002" ItemName="魔法药水" ItemType="1" Quality="1" Price="50" Description="恢复 100 点魔法值" MaxStack="99" IconPath="Icons/item_002" ModelPath="" EffectIds="103,104" />
+  <row Id="1003" ItemName="铁剑" ItemType="2" Quality="2" Price="200" Description="普通的铁剑，攻击力+10" MaxStack="1" IconPath="Icons/item_003" ModelPath="Models/weapon_001" EffectIds="201" />
+  <row Id="1004" ItemName="钢剑" ItemType="2" Quality="3" Price="500" Description="精钢打造的剑，攻击力+25" MaxStack="1" IconPath="Icons/item_004" ModelPath="Models/weapon_002" EffectIds="202" />
+  <row Id="1005" ItemName="勇者之剑" ItemType="2" Quality="5" Price="5000" Description="传说勇者的佩剑，攻击力+100" MaxStack="1" IconPath="Icons/item_005" ModelPath="Models/weapon_003" EffectIds="203,204" />
+  <row Id="1006" ItemName="回复卷轴" ItemType="3" Quality="1" Price="100" Description="使用后恢复 500 点生命值" MaxStack="20" IconPath="Icons/item_006" ModelPath="" EffectIds="301" />
+  <row Id="1007" ItemName="传送卷轴" ItemType="3" Quality="2" Price="300" Description="使用后返回城镇" MaxStack="10" IconPath="Icons/item_007" ModelPath="" EffectIds="302" />
+  <row Id="1008" ItemName="强化石 +1" ItemType="4" Quality="2" Price="1000" Description="武器强化材料" MaxStack="999" IconPath="Icons/item_008" ModelPath="" EffectIds="" />
+</root>

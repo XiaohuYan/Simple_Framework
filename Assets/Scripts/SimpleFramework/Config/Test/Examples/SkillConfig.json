@@ -1,0 +1,82 @@
+{
+  "items": [
+    {
+      "Id": 2001,
+      "SkillName": "火球术",
+      "SkillType": 1,
+      "ManaCost": 50,
+      "Cooldown": 3.5,
+      "DamageMultiplier": 1.5,
+      "Range": 20.0,
+      "PreSkillId": 0,
+      "MaxLevel": 10,
+      "Description": "发射一枚火球，对目标造成魔法伤害",
+      "EffectPath": "Effects/Skills/Fireball"
+    },
+    {
+      "Id": 2002,
+      "SkillName": "冰霜新星",
+      "SkillType": 1,
+      "ManaCost": 80,
+      "Cooldown": 8.0,
+      "DamageMultiplier": 2.0,
+      "Range": 15.0,
+      "PreSkillId": 0,
+      "MaxLevel": 10,
+      "Description": "释放冰霜能量，对周围敌人造成伤害并减速",
+      "EffectPath": "Effects/Skills/FrostNova"
+    },
+    {
+      "Id": 2003,
+      "SkillName": "治疗术",
+      "SkillType": 2,
+      "ManaCost": 60,
+      "Cooldown": 5.0,
+      "DamageMultiplier": 0.0,
+      "Range": 10.0,
+      "PreSkillId": 0,
+      "MaxLevel": 10,
+      "Description": "恢复目标大量生命值",
+      "EffectPath": "Effects/Skills/Heal"
+    },
+    {
+      "Id": 2004,
+      "SkillName": "神圣护盾",
+      "SkillType": 3,
+      "ManaCost": 100,
+      "Cooldown": 30.0,
+      "DamageMultiplier": 0.0,
+      "Range": 0.0,
+      "PreSkillId": 0,
+      "MaxLevel": 5,
+      "Description": "在目标周围形成护盾，吸收伤害",
+      "EffectPath": "Effects/Skills/HolyShield"
+    },
+    {
+      "Id": 2005,
+      "SkillName": "闪电链",
+      "SkillType": 1,
+      "ManaCost": 120,
+      "Cooldown": 12.0,
+      "DamageMultiplier": 1.8,
+      "Range": 25.0,
+      "PreSkillId": 2001,
+      "MaxLevel": 10,
+      "Description": "释放闪电链，对多个目标造成伤害",
+      "EffectPath": "Effects/Skills/ChainLightning"
+    },
+    {
+      "Id": 2006,
+      "SkillName": "隐身术",
+      "SkillType": 4,
+      "ManaCost": 70,
+      "Cooldown": 20.0,
+      "DamageMultiplier": 0.0,
+      "Range": 0.0,
+      "PreSkillId": 0,
+      "MaxLevel": 5,
+      "Description": "使自身进入隐身状态",
+      "EffectPath": "Effects/Skills/Invisibility"
+    }
+  ]
+}
