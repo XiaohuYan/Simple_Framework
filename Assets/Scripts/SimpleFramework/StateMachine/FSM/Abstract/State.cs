@@ -10,9 +10,9 @@ namespace SimpleFramework.StateMachine.FSM
         /// <summary>
         /// ×´Ì¬»ú
         /// </summary>
-        protected StateMachine<TState> machine;
+        protected FSMStateMachine<TState> machine;
 
-        public State(StateMachine<TState> machine)
+        public State(FSMStateMachine<TState> machine)
         {
             this.machine = machine;
         }

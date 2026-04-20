@@ -1,4 +1,4 @@
-
+using SimpleFramework.StateMachine.FSM;
 namespace SimpleFramework.Game
 {
     public partial class GameManager : IGameManager
@@ -7,6 +7,11 @@ namespace SimpleFramework.Game
         /// 游戏状态
         /// </summary>
         private GameStateEnum gameState;
+
+        /// <summary>
+        /// 游戏状态状态机
+        /// </summary>
+        private FSMStateMachine<GameStateEnum> fSMStateMachine;
 
         /// <summary>
         /// 获取到游戏状态
@@ -26,7 +31,7 @@ namespace SimpleFramework.Game
 
         public void AfterManagerInit()
         {
-            
+            fSMStateMachine = new FSMStateMachine<GameStateEnum>();
         }
 
         public void OnManagerDestroy()

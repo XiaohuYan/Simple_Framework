@@ -7,9 +7,9 @@ namespace SimpleFramework.StateMachine.HSM
         /// <summary>
         /// 状态机
         /// </summary>
-        public readonly StateMachine Machine;
+        public readonly HSMStateMachine Machine;
 
-        public TransitionSequencer(StateMachine machine)
+        public TransitionSequencer(HSMStateMachine machine)
         {
             Machine = machine;
         }

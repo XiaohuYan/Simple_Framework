@@ -12,14 +12,14 @@ namespace SimpleFramework.StateMachine.HSM
             this.root = root;
         }
 
-        public StateMachine Build()
+        public HSMStateMachine Build()
         {
-            var m = new StateMachine(root);
+            var m = new HSMStateMachine(root);
             Wire(root, m, new HashSet<State>());
             return m;
         }
 
-        void Wire(State s, StateMachine m, HashSet<State> visited)
+        void Wire(State s, HSMStateMachine m, HashSet<State> visited)
         {
             if (s == null)
             {

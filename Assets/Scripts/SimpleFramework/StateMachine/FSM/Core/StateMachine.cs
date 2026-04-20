@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SimpleFramework.StateMachine.FSM
 {
-    public class StateMachine<TState> where TState : Enum
+    public class FSMStateMachine<TState> where TState : Enum
     {
         // ËùÓÐ×´Ì¬
         protected Dictionary<TState, State<TState>> states = new Dictionary<TState, State<TState>>();
@@ -16,7 +16,7 @@ namespace SimpleFramework.StateMachine.FSM
         /// </summary>
         private TState currentState;
 
-        public StateMachine()
+        public FSMStateMachine()
         {
             InitialStateMachine();
             currentState = default;
@@ -46,7 +46,7 @@ namespace SimpleFramework.StateMachine.FSM
 
                 if (attribute.StateEnum is TState stateEnum)
                 {
-                    if (Activator.CreateInstance(type) is State<TState> stateInstance)
+                    if (Activator.CreateInstance(type, this) is State<TState> stateInstance)
                     {
                         RegisterState(stateEnum, stateInstance);
                     }

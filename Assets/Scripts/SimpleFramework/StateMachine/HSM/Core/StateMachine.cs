@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace SimpleFramework.StateMachine.HSM
 {
-    public class StateMachine
+    public class HSMStateMachine
     {
         /// <summary>
         /// ×´Ì¬¸ù½Úµã
@@ -19,7 +19,7 @@ namespace SimpleFramework.StateMachine.HSM
         /// </summary>
         bool started;
 
-        public StateMachine(State root)
+        public HSMStateMachine(State root)
         {
             Root = root;
             Sequencer = new TransitionSequencer(this);

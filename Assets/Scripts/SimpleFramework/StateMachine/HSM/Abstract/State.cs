@@ -10,7 +10,7 @@ namespace SimpleFramework.StateMachine.HSM
         /// <summary>
         /// ×´Ì¬»ú
         /// </summary>
-        public readonly StateMachine Machine;
+        public readonly HSMStateMachine Machine;
 
         /// <summary>
         /// ¸¸×´Ì¬
@@ -22,7 +22,7 @@ namespace SimpleFramework.StateMachine.HSM
         /// </summary>
         public State ActiveChild { get; private set; }
 
-        public State(StateMachine machine, State parent = null)
+        public State(HSMStateMachine machine, State parent = null)
         {
             Machine = machine;
             Parent = parent;
