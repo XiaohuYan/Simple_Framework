@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 namespace SimpleFramework.ObjectPool
 {
@@ -8,9 +9,28 @@ namespace SimpleFramework.ObjectPool
         private readonly Queue<T> pool = new Queue<T>();
         private readonly int maxSize;
 
+        // 回调事件
+        private UnityAction<T> onCreate;
+        private UnityAction<T> onGet;
+        private UnityAction<T> onReturn;
+        private UnityAction<T> onDestroy;
+
         public ObjectPool(int maxSize = 100)
         {
             this.maxSize = maxSize;
+        }
+
+        public ObjectPool(int maxSize = 100,
+            UnityAction<T> onCreate = null,
+            UnityAction<T> onGet = null,
+            UnityAction<T> onReturn = null,
+            UnityAction<T> onDestroy = null)
+        {
+            this.maxSize = maxSize;
+            this.onCreate = onCreate;
+            this.onGet = onGet;
+            this.onReturn = onReturn;
+            this.onDestroy = onDestroy;
         }
 
         public override int Count => pool.Count;
@@ -19,6 +39,13 @@ namespace SimpleFramework.ObjectPool
 
         public override void Clear()
         {
+            if (onDestroy != null)
+            {
+                foreach (var obj in pool)
+                {
+                    onDestroy(obj);
+                }
+            }
             pool.Clear();
         }
 
@@ -27,9 +54,20 @@ namespace SimpleFramework.ObjectPool
         /// </summary>
         public T Get()
         {
+            T obj;
             if (pool.Count > 0)
-                return pool.Dequeue();
-            return new T();
+            {
+                obj = pool.Dequeue();
+            }
+            else
+            {
+                // TODO 创建
+                obj = default(T);
+                onCreate?.Invoke(obj);
+            }
+
+            onGet?.Invoke(obj);
+            return obj;
         }
 
         /// <summary>
@@ -41,8 +79,46 @@ namespace SimpleFramework.ObjectPool
                 throw new ArgumentNullException(nameof(obj));
 
             if (pool.Count < maxSize)
+            {
+                onReturn?.Invoke(obj);
                 pool.Enqueue(obj);
-            // 如果超过最大容量，则丢弃对象，让GC回收
+            }
+            else
+            {
+                onDestroy?.Invoke(obj);
+            }
+        }
+
+        /// <summary>
+        /// 设置创建回调
+        /// </summary>
+        public void SetOnCreateCallback(UnityAction<T> callback)
+        {
+            onCreate = callback;
+        }
+
+        /// <summary>
+        /// 设置获取回调
+        /// </summary>
+        public void SetOnGetCallback(UnityAction<T> callback)
+        {
+            onGet = callback;
+        }
+
+        /// <summary>
+        /// 设置归还回调
+        /// </summary>
+        public void SetOnReturnCallback(UnityAction<T> callback)
+        {
+            onReturn = callback;
+        }
+
+        /// <summary>
+        /// 设置销毁回调
+        /// </summary>
+        public void SetOnDestroyCallback(UnityAction<T> callback)
+        {
+            onDestroy = callback;
         }
 
         protected override object GetObjInternal()
