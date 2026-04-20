@@ -6,18 +6,18 @@ namespace SimpleFramework.Game
         /// <summary>
         /// 游戏状态
         /// </summary>
-        private GameStateEnum gameState;
+        private EGameState gameState;
 
         /// <summary>
         /// 游戏状态状态机
         /// </summary>
-        private FSMStateMachine<GameStateEnum> fSMStateMachine;
+        private FSMStateMachine<EGameState> fSMStateMachine;
 
         /// <summary>
         /// 获取到游戏状态
         /// </summary>
         /// <returns>游戏状态</returns>
-        public GameStateEnum GetGameState()
+        public EGameState GetGameState()
         {
             return gameState;
         }
@@ -31,7 +31,7 @@ namespace SimpleFramework.Game
 
         public void AfterManagerInit()
         {
-            fSMStateMachine = new FSMStateMachine<GameStateEnum>();
+            fSMStateMachine = new FSMStateMachine<EGameState>();
         }
 
         public void OnManagerDestroy()

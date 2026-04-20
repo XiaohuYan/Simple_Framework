@@ -2,10 +2,10 @@ using SimpleFramework.StateMachine.FSM;
 
 namespace SimpleFramework.Game
 {
-    [State((int)GameManager.GameStateEnum.Loading)]
-    public class GameState_Loading : State<GameManager.GameStateEnum>
+    [State((int)GameManager.EGameState.Loading)]
+    public class GameState_Loading : State<GameManager.EGameState>
     {
-        public GameState_Loading(FSMStateMachine<GameManager.GameStateEnum> machine) : base(machine) { }
+        public GameState_Loading(FSMStateMachine<GameManager.EGameState> machine) : base(machine) { }
 
         public override void Enter()
         {

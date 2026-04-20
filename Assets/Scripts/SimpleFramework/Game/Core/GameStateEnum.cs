@@ -2,7 +2,7 @@ namespace SimpleFramework.Game
 {
     public partial class GameManager : IGameManager
     {
-        public enum GameStateEnum : byte
+        public enum EGameState : byte
         {
             Start = 0,      // ∆Ù∂Ø
             Loading = 1,    // º”‘ÿ÷–

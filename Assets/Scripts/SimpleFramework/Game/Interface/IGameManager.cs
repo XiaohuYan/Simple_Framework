@@ -9,6 +9,6 @@ namespace SimpleFramework.Game
         /// 获取到游戏状态
         /// </summary>
         /// <returns>游戏状态</returns>
-        GameManager.GameStateEnum GetGameState();
+        GameManager.EGameState GetGameState();
     }
 }
