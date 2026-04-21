@@ -11,7 +11,7 @@ namespace SimpleFramework.Game
         /// <summary>
         /// 游戏状态状态机
         /// </summary>
-        private FSMStateMachine<EGameState> fSMStateMachine;
+        private readonly FSMStateMachine<EGameState> fSMStateMachine = new FSMStateMachine<EGameState>();
 
         /// <summary>
         /// 获取到游戏状态
@@ -22,6 +22,23 @@ namespace SimpleFramework.Game
             return gameState;
         }
 
+        /// <summary>
+        /// 切换游戏状态
+        /// </summary>
+        /// <param name="gameState"></param>
+        private void ChangeGameState(EGameState gameState)
+        {
+            fSMStateMachine.ChangeState(gameState,OnChangState);
+        }
+
+        /// <summary>
+        /// 游戏状态切换后的回调
+        /// </summary>
+        /// <param name="gameState"></param>
+        private void OnChangState(EGameState gameState)
+        {
+
+        }
 
         public void OnManagerInit()
         {
@@ -31,7 +48,7 @@ namespace SimpleFramework.Game
 
         public void AfterManagerInit()
         {
-            fSMStateMachine = new FSMStateMachine<EGameState>();
+            
         }
 
         public void OnManagerDestroy()
