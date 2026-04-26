@@ -1,4 +1,5 @@
 using SimpleFramework.Common;
+using System.Threading.Tasks;
 using UnityEngine.Events;
 
 namespace SimpleFramework.Scene
@@ -18,6 +19,6 @@ namespace SimpleFramework.Scene
         /// <param name="name">场景名</param>
         /// <param name="action">加载完成后需要调用的方法</param>
         /// <param name="OnProgressUpdate">进度条更新方法</param>
-        void LoadSceneAsync(string name, UnityAction callback, UnityAction<float> OnProgressUpdateCallback);
+        Task LoadSceneAsync(string name, UnityAction callback, UnityAction<float> OnProgressUpdateCallback);
     }
 }

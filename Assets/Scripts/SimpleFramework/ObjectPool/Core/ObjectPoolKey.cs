@@ -1,4 +1,3 @@
-using SimpleFramework.Extension;
 using SimpleFramework.Common.TypeNameKey;
 using System;
 

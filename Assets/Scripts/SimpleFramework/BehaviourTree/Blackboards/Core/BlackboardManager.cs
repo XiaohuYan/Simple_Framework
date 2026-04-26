@@ -6,6 +6,10 @@ namespace SimpleFramework.BehaviourTree.BlackboardSystem
 {
     public class BlackboardManager : IManager
     {
+        private int priority = 0;
+
+        public int Priority => priority;
+
         private BlackboardData blackboardData;
         private readonly Blackboard blackboard = new Blackboard();
         private readonly Arbiter arbiter = new Arbiter();

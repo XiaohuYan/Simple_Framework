@@ -6,6 +6,10 @@ namespace SimpleFramework.Resource
 {
     public class ResourceManager : IResourceManager
     {
+        private int priority = 0;
+
+        public int Priority => priority;
+
         /// <summary>
         /// 同步加载Resource资源
         /// </summary>
@@ -23,7 +27,7 @@ namespace SimpleFramework.Resource
         /// <typeparam name="T">资源类型</typeparam>
         /// <param name="path">资源路径</param>
         /// <param name="callback">加载完成后处理资源的回调</param>
-        public async void LoadResourceAsync<T>(string path, UnityAction<T> callback) where T : Object
+        public async Task LoadResourceAsync<T>(string path, UnityAction<T> callback) where T : Object
         {
             ResourceRequest request = Resources.LoadAsync<T>(path);
             while (!request.isDone)
@@ -33,19 +37,15 @@ namespace SimpleFramework.Resource
             callback(request.asset as T);
         }
 
-        public void OnManagerInit()
-        {
+        #region IManager 接口
 
-        }
+        public void OnManagerInit() { }
 
-        public void AfterManagerInit()
-        {
+        public void AfterManagerInit() { }
 
-        }
+        public void OnManagerDestroy() { }
 
-        public void OnManagerDestroy()
-        {
-            
-        }     
+        #endregion
+
     }
 }

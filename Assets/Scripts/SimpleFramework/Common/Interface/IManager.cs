@@ -6,6 +6,11 @@ namespace SimpleFramework.Common
     public interface IManager
     {
         /// <summary>
+        /// 优先级，主要用于最后卸载时释放顺序
+        /// </summary>
+        int Priority { get; }
+
+        /// <summary>
         /// 初始化时调用
         /// </summary>
         void OnManagerInit();

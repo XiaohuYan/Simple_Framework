@@ -11,6 +11,10 @@ namespace SimpleFramework.Localization
     /// </summary>
     public class LocalizationManager : ILocalizationManager
     {
+        private int priority = 0;
+
+        public int Priority => priority;
+
         /// <summary>
         /// 默认语言
         /// </summary>

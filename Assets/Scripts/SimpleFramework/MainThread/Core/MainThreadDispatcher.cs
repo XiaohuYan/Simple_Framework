@@ -7,6 +7,10 @@ namespace SimpleFramework.MainThread
 {
     public class MainThreadDispatcher : IMainthreadDispatcher
     {
+        private int priority = 0;
+
+        public int Priority => priority;
+
         /// <summary>
         /// 在主线程调用的队列
         /// </summary>

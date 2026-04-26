@@ -10,6 +10,10 @@ namespace SimpleFramework.Persistence
     /// </summary>
     public class PersistenceManager : IPersistenceManager
     {
+        private int priority = 0;
+
+        public int Priority => priority;
+
         /// <summary>
         /// 持久化文件目录名
         /// </summary>

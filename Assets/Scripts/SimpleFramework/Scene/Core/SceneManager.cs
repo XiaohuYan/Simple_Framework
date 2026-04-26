@@ -5,6 +5,10 @@ namespace SimpleFramework.Scene
 {
     public class SceneManager : ISceneManager
     {
+        private int priority = 0;
+
+        public int Priority => priority;
+
         /// <summary>
         /// 同步加载场景
         /// </summary>
@@ -22,7 +26,7 @@ namespace SimpleFramework.Scene
         /// <param name="name">场景名</param>
         /// <param name="action">加载完成后需要调用的方法</param>
         /// <param name="OnProgressUpdate">进度条更新方法</param>
-        public async void LoadSceneAsync(string name, UnityAction callback, UnityAction<float> OnProgressUpdateCallback)
+        public async Task LoadSceneAsync(string name, UnityAction callback, UnityAction<float> OnProgressUpdateCallback)
         {
             var asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(name);
 

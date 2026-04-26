@@ -4,6 +4,10 @@ namespace SimpleFramework.Player
 {
     public class PlayerManager : IPlayerManager
     {
+        private int priority = 0;
+
+        public int Priority => priority;
+
         private GameObject player;
 
         /// <summary>

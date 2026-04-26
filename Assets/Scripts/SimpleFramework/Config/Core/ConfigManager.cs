@@ -9,8 +9,12 @@ namespace SimpleFramework.Config
     /// 配置表管理器
     /// 使用工厂模式 + 策略模式管理配置表的加载和解析
     /// </summary>
-    public class ConfigManager:IManager
+    public class ConfigManager : IManager
     {
+        private int priority = 0;
+
+        public int Priority => priority;
+
         /// <summary>
         /// 已加载的配置表缓存
         /// Key: 配置表名称
@@ -262,12 +266,12 @@ namespace SimpleFramework.Config
 
         public void AfterManagerInit()
         {
-         
+
         }
 
         public void OnManagerDestroy()
         {
-         
+
         }
 
         /// <summary>

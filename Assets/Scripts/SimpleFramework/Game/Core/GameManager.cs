@@ -3,6 +3,10 @@ namespace SimpleFramework.Game
 {
     public partial class GameManager : IGameManager
     {
+        private int priority = 0;
+
+        public int Priority => priority;
+
         /// <summary>
         /// ÓÎÏ·×´Ì¬
         /// </summary>
@@ -26,7 +30,7 @@ namespace SimpleFramework.Game
         /// ÇÐ»»ÓÎÏ·×´Ì¬
         /// </summary>
         /// <param name="gameState"></param>
-        private void ChangeGameState(EGameState gameState)
+        public void ChangeGameState(EGameState gameState)
         {
             fSMStateMachine.ChangeState(gameState,OnChangState);
         }

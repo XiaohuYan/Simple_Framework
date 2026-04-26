@@ -1,4 +1,5 @@
 using SimpleFramework.Common;
+using System.Threading.Tasks;
 using UnityEngine.Events;
 
 namespace SimpleFramework.Resource
@@ -19,6 +20,6 @@ namespace SimpleFramework.Resource
         /// <typeparam name="T">资源类型</typeparam>
         /// <param name="path">资源路径</param>
         /// <param name="callback">加载完成后处理资源的回调</param>
-        void LoadResourceAsync<T>(string path, UnityAction<T> callback) where T : UnityEngine.Object;
+        Task LoadResourceAsync<T>(string path, UnityAction<T> callback) where T : UnityEngine.Object;
     }
 }

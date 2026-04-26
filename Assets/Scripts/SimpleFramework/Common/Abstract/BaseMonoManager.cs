@@ -4,6 +4,10 @@ namespace SimpleFramework.Common
 {
     public abstract class BaseMonoManager : MonoBehaviour, IManager
     {
+        protected int priority = 0;
+
+        public int Priority => priority;
+
         public virtual void OnManagerInit()
         {
             // ·ÀÖ¹ÇĞ»»³¡¾°ºóÏú»Ù

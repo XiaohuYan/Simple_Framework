@@ -1,12 +1,16 @@
 using SimpleFramework.Aduio;
-using SimpleFramework.Entry;
-using SimpleFramework.ObjectPool;
+using UnityEngine.Pool;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SimpleFramework.Audio
 {
     public class AudioManager : IAudioManager
     {
+        private int priority = 0;
+
+        public int Priority => priority;
+
         /// <summary>
         /// 活跃的声音列表
         /// </summary>
@@ -14,12 +18,44 @@ namespace SimpleFramework.Audio
 
         private readonly Queue<AudioEmitter> frequentAudioEmitters = new Queue<AudioEmitter>();
 
+        private ObjectPool<AudioEmitter> soundEmitterPool;
+
+        private GameObject audioEmitterPrefab;
+
         /// <summary>
         /// 同时播发任意声音的最大数量
         /// </summary>
         private int maxSoundInstance = 30;
 
-        private IObjectPoolManager objectPoolManager;
+        void OnDestoryPool(AudioEmitter audio)
+        {
+            GameObject.Destroy(audio);
+        }
+
+        void OnReturnToPool(AudioEmitter audio)
+        {
+            audio.gameObject.SetActive(false);
+            activeSoundEmitter.Remove(audio);
+        }
+
+        void OnTakeFromPool(AudioEmitter audio)
+        {
+            audio.gameObject.SetActive(true);
+            activeSoundEmitter.Add(audio);
+        }
+
+        AudioEmitter CreateAudioEmitter()
+        {
+            var audio = GameObject.Instantiate(audioEmitterPrefab);
+            audio.SetActive(false);
+            return audio.GetComponent<AudioEmitter>();
+        }
+
+        private void InitializePool()
+        {
+            soundEmitterPool = new ObjectPool<AudioEmitter>(CreateAudioEmitter, OnTakeFromPool, OnReturnToPool, OnDestoryPool, true, 10, 100);
+        }
+
 
         /// <summary>
         /// 创建
@@ -41,7 +77,7 @@ namespace SimpleFramework.Audio
         /// <returns></returns>
         public AudioEmitter Get()
         {
-            return objectPoolManager.Get<AudioEmitter>();
+            return soundEmitterPool.Get();
         }
 
         /// <summary>
@@ -50,7 +86,7 @@ namespace SimpleFramework.Audio
         /// <param name="audioEmitter"></param>
         public void ReturnToPool(AudioEmitter audioEmitter)
         {
-            objectPoolManager.Return<AudioEmitter>(audioEmitter);
+            soundEmitterPool.Release(audioEmitter);
         }
 
         /// <summary>
@@ -122,19 +158,12 @@ namespace SimpleFramework.Audio
 
         public void OnManagerInit()
         {
-
+            InitializePool();
         }
 
-        public void AfterManagerInit()
-        {
-            objectPoolManager = GameFacade.Instance.GetManager<IObjectPoolManager>();
-            objectPoolManager.CreatePoolWithCallback<AudioEmitter>(100, OnCreateSoundEmitter, OnGetSoundEmitter, OnReturnSoundEmitter, OnDestorySoundEmitter);
-        }
+        public void AfterManagerInit() { }
 
-        public void OnManagerDestroy()
-        {
-            
-        }
+        public void OnManagerDestroy() { }
 
     }
 }

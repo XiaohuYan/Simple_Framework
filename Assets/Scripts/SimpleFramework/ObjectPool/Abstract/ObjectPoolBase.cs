@@ -1,32 +1,37 @@
-using System;
-
 namespace SimpleFramework.ObjectPool
 {
     public abstract class ObjectPoolBase
     {
-        /// <summary>
-        /// 数量
-        /// </summary>
-        public abstract int Count { get; }
+        /// <summary> 对象池名字  </summary>
+        private string name;
+
+        public ObjectPoolBase(string name)
+        {
+            this.name = name;
+        }
+
+        public string Name => name;
 
         /// <summary>
-        /// 类型
+        /// 用于判断是否需要释放对象
         /// </summary>
-        public abstract Type ElementType { get; }
+        /// <param name="deltaTime">帧时间</param>
+        public abstract void Update(float deltaTime);
 
         /// <summary>
-        /// 清空
+        /// 释放对象池中的对象
+        /// </summary>
+        public abstract void Release();
+
+        /// <summary>
+        /// 释放对象
+        /// </summary>
+        /// <param name="releaseCount">释放的数量</param>
+        public abstract void Release(int releaseCount);
+
+        /// <summary>
+        /// 清空对象池
         /// </summary>
         public abstract void Clear();
-
-        /// <summary>
-        /// 获取对象（非泛型，内部使用）
-        /// </summary>
-        protected abstract object GetObjInternal();
-
-        /// <summary>
-        /// 归还对象（非泛型，内部使用）
-        /// </summary>
-        protected abstract void ReturnObjInternal(object obj);
     }
 }

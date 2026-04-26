@@ -11,6 +11,10 @@ namespace SimpleFramework.AB
 {
     public class ABUpdateManager : IABUpdateManager
     {
+        private int priority = 0;
+
+        public int Priority => priority;
+
         /// <summary>
         /// 用于存储云端的 AB 包信息
         /// </summary>
