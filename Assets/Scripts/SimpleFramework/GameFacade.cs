@@ -114,12 +114,17 @@ namespace SimpleFramework.Entry
         /// </summary>
         public void Destory()
         {
+            List<IManager> managerList = new List<IManager>(managers.Count);
             foreach (var manager in managers.Values)
             {
-                manager.OnManagerDestroy();
+                managerList.Add(manager);
+            }
+            managerList.Sort((a, b) => (b.Priority.CompareTo(a.Priority)));
+            foreach (var item in managerList)
+            {
+                item.OnManagerDestroy();
             }
             managers.Clear();
-
             instance = null;
         }
     }

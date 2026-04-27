@@ -1,19 +1,29 @@
+using SimpleFramework.Entry;
+using SimpleFramework.ObjectPool;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace SimpleFramework.UI
 {
-    public class UIManager : IUIManager
+    public partial class UIManager : IUIManager
     {
-        /// <summary>
-        /// 所有实例化的游戏物体面板
-        /// </summary>
-        private Dictionary<string, UIBaseView> panelDict = new();
+        private int priority = 0;
+
+        public int Priority => priority;
 
         /// <summary>
-        /// 所有实例化的游戏物体面板控制器
+        /// 层级父节点字典
         /// </summary>
-        private Dictionary<string, UIControllerCore> panelControllerDict = new();
+        private readonly Dictionary<UILayerType, UILayerManager> m_layerParents = new();
+
+        /// <summary>
+        /// 每个 ui 对应的所有基本信息
+        /// </summary>
+        private readonly Dictionary<int, UIInformation> panelInfoDic = new();
 
         /// <summary>
         /// ui 父物体
@@ -21,92 +31,160 @@ namespace SimpleFramework.UI
         private Transform canvasTransform;
 
         /// <summary>
-        /// UI 栈
+        /// 加载地址
         /// </summary>
-        private Stack<UIBaseView> panelStack = new Stack<UIBaseView>();
+        private const string LoadPath = "UI";
 
         /// <summary>
-        /// ui 入栈
+        /// ui 对象池
         /// </summary>
-        /// <param name="name"></param>
-        public void PushPanel(string name, UIControllerCore controller = default)
+        private IObjectPool<UIInstance> uiPool;
+
+        /// <summary>
+        /// ui Id
+        /// </summary>
+        private int uiId = 0;
+
+        #region 初始化
+
+        /// <summary>
+        /// 初始化 root
+        /// </summary>
+        private void InitUIRootInternel()
         {
-            UIBaseView panel = GetPanel(name);
-            if (panel != null)
+            canvasTransform = GameObject.Find("Canvas").transform;
+
+            if (canvasTransform == null)
             {
-                if (!panelControllerDict.ContainsKey(name))
-                {
-                    panelControllerDict.Add(name, controller);
-                    controller?.InitController(panel);
-                }
-                if (panelStack.Count > 0)
-                {
-                    panelStack.Peek().OnPause();
-                }
-                panel.OnEnter();
-                panelStack.Push(panel);
+                GameObject go = new GameObject("Canvas");
+                canvasTransform = go.transform;
+                // 初始化组件
+                Canvas canvas = go.AddComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+
+                CanvasScaler scaler = go.AddComponent<CanvasScaler>();
+                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                scaler.referenceResolution = new Vector2(1920, 1080);
+
+                go.AddComponent<GraphicRaycaster>();
+            }
+
+            if (!GameObject.Find("EventSystem"))
+            {
+                GameObject go = new GameObject("EventSystem");
+
+                go.AddComponent<UnityEngine.EventSystems.EventSystem>();
+                go.AddComponent<StandaloneInputModule>();
             }
         }
 
         /// <summary>
-        /// ui 出栈
+        /// 初始化所有 ui 层
         /// </summary>
-        public void PopPanel()
+        private void InitLayerParents()
         {
-            if (panelStack.Count > 0)
+            var layers = Enum.GetValues(typeof(UILayerType));
+            foreach (UILayerType layer in layers)
             {
-                panelDict.Remove(panelStack.Peek().name);
-                panelStack.Pop().OnExit();
-                if (panelControllerDict.TryGetValue(panelStack.Peek().name, out var controller))
-                {
-                    controller.DisposeController();
-                }
-                panelControllerDict.Remove(panelStack.Peek().name);
-            }
-            if (panelStack.Count > 0)
-            {
-                panelStack.Peek().OnResume();
+                var go = new GameObject($"Layer_{(int)layer}");
+                go.transform.SetParent(canvasTransform);
+                go.transform.localPosition = Vector3.zero;
+                go.transform.localScale = Vector3.one;
+
+                m_layerParents[layer] = new UILayerManager(layer, go.transform);
             }
         }
 
-        /// <summary>
-        /// 获取到 UI
-        /// </summary>
-        /// <param name="name">ui名</param>
-        /// <returns></returns>
-        private UIBaseView GetPanel(string name)
+        #endregion
+
+        public T OpenPanel<T>(string name) where T : UIBaseView
         {
-            UIBaseView panel;
-            if (!panelDict.TryGetValue(name, out panel))
-            {
-                GameObject panelInstance = GameObject.Instantiate(Resources.Load<GameObject>($"UI/{name}Panel"));
-                if (canvasTransform == null)
-                {
-                    canvasTransform = GameObject.Find("Canvas").transform;
-                }
-                panelInstance.transform.SetParent(canvasTransform, false);
-                panel = panelInstance.GetComponent<UIBaseView>();
-                panelDict.Add(name, panel);
-            }
-            return panel;
+            return OpenPanelInternal<T>(name, new UIConfig(name), null);
         }
+
+        public T OpenPanelInternal<T>(string name, UIConfig config) where T : UIBaseView
+        {
+            return OpenPanelInternal<T>(name, config, null);
+        }
+
+        public T OpenPanel<T>(string name, UIConfig config, UIControllerCore uiController) where T : UIBaseView
+        {
+            return OpenPanelInternal<T>(name, config, uiController);
+        }
+
+
+        private T OpenPanelInternal<T>(string name, UIConfig config, UIControllerCore uiController) where T : UIBaseView
+        {
+            uiId++;
+            UIInstance uiInstance = uiPool.Get(name);
+            UIInformation uiInformation = new UIInformation(uiId).SetConfig(config).SetController(uiController);
+            if (uiInstance == null)
+            {
+                // 暂时先这样加载后续改为异步(每次都加载创建也是有问题的，需要后续在资源管理器里使用对象池缓存)
+                GameObject uiAsset = Resources.Load<GameObject>(Path.Combine(LoadPath, name));
+                GameObject readlObj = GameObject.Instantiate(uiAsset);
+
+                uiInstance = new UIInstance(name, uiAsset, readlObj);
+                uiPool.Register(uiInstance);
+
+                uiInformation.SetView(readlObj.GetComponent<T>());
+            }
+            else
+            {
+                uiInformation.SetView((uiInstance.RealObject as T).GetComponent<UIBaseView>());
+            }
+            return m_layerParents[config.LayerType].OpenPanel<T>(uiInformation);
+        }
+
+        public void ClosePanel(int id)
+        {
+            if (!panelInfoDic.ContainsKey(id))
+            {
+                throw new Exception($"无法找到id为：{id}的面板");
+            }
+            m_layerParents[panelInfoDic[id].Config.LayerType].ClosePanel(panelInfoDic[id]);
+        }
+
+
+        /// <summary>
+        /// 清除缓存
+        /// </summary>
+        private void ClearCache()
+        {
+            canvasTransform = null;
+            uiPool = null;
+            foreach (var item in m_layerParents.Values)
+            {
+                item.Clear();
+            }
+            m_layerParents.Clear();
+            foreach (var item in panelInfoDic.Values)
+            {
+                item.Clear();
+            }
+            panelInfoDic.Clear();
+            uiId = 0;
+        }
+
+        #region IManager 接口
 
         public void OnManagerInit()
         {
-            canvasTransform = GameObject.Find("Canvas").transform;
+            InitUIRootInternel();
+            InitLayerParents();
         }
 
         public void AfterManagerInit()
         {
-
+            uiPool = GameFacade.Instance.GetManager<IObjectPoolManager>().CreatePool<UIInstance>(nameof(UIInstance), 10, 30, 10);
         }
 
         public void OnManagerDestroy()
         {
-            panelStack.Clear();
-            panelDict.Clear();
-            panelControllerDict.Clear();
+            ClearCache();
         }
+
+        #endregion
 
     }
 }

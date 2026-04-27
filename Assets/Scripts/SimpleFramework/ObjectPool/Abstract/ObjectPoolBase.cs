@@ -30,8 +30,8 @@ namespace SimpleFramework.ObjectPool
         public abstract void Release(int releaseCount);
 
         /// <summary>
-        /// 清空对象池
+        /// 释放所有对象
         /// </summary>
-        public abstract void Clear();
+        public abstract void ReleaseAll();
     }
 }

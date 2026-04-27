@@ -8,7 +8,7 @@ namespace SimpleFramework.ObjectPool
     /// <summary>
     /// 对象池管理类
     /// </summary>
-    public class ObjectPoolManager : IObjectPoolManager
+    public partial class ObjectPoolManager : IObjectPoolManager
     {
         /// <summary> 所有的对象池 </summary>
         private readonly Dictionary<ObjectPoolKey, ObjectPoolBase> objectPools = new();
@@ -39,7 +39,7 @@ namespace SimpleFramework.ObjectPool
         /// <param name="autoReleaseIntervel">对象池自动释放时间</param>
         /// <returns>创建好的对象池</returns>
         /// <exception cref="System.ArgumentException">创建已经存在的对象池错误</exception>
-        public ObjectPool<T> CreatePool<T>(string name, int capacity, float existTime, float autoReleaseIntervel) where T : ObjectBase
+        public IObjectPool<T> CreatePool<T>(string name, int capacity, float existTime, float autoReleaseIntervel) where T : ObjectBase
         {
             ObjectPoolKey key = new ObjectPoolKey(typeof(T), name);
             if (HasObjectPool<T>(key))
@@ -57,7 +57,7 @@ namespace SimpleFramework.ObjectPool
         /// <typeparam name="T">对象池里的对象类型</typeparam>
         /// <param name="name">对象池名字</param>
         /// <returns>是否含有对象池</returns>
-        public bool HasObjectPool<T>(ObjectPoolKey key)
+        private bool HasObjectPool<T>(ObjectPoolKey key)
         {
             return objectPools.ContainsKey(key);
         }
@@ -69,7 +69,7 @@ namespace SimpleFramework.ObjectPool
         {
             foreach(var pool in objectPools.Values)
             {
-                pool.Clear();
+                pool.ReleaseAll();
             }
             objectPools.Clear();
         }

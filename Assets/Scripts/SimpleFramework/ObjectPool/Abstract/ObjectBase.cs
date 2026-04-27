@@ -24,7 +24,7 @@ namespace SimpleFramework.ObjectPool
         public DateTime LasetUseTime => lastUseTime;
 
         /// <summary>
-        /// 获取对象。
+        /// 实例化后的实际对象
         /// </summary>
         public object RealObject => realObject;
 
@@ -58,5 +58,15 @@ namespace SimpleFramework.ObjectPool
         /// 释放对象
         /// </summary>
         public abstract void Release();
+
+        /// <summary>
+        /// 清空
+        /// </summary>
+        public virtual void Clear()
+        {
+            realObject = null;
+            name = null;
+            lastUseTime = default;
+        }
     }
 }
